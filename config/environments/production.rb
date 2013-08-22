@@ -78,4 +78,6 @@ PixApp::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
   config.eager_load = true
+  config.action_mailer.default_url_options = { :host => 'http://webo-pix.herokuapp.com' }
+  #config.cache_store = :mem_cache_store, "localhost"
 end
