@@ -1,0 +1,33 @@
+<%- model_class = Category -%>
+<div class="page-header">
+  <h3>List of categories</h3>
+</div>
+<table class="table table-striped table-bordered">
+  <thead>
+  <tr>
+    <th>Name of Category</th>
+    <th><%=t '.actions', :default => t("helpers.actions") %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @categories.each do |category| %>
+      <tr>
+        <td><%= link_to category.name, category_path(category) %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_category_path(category), :class => 'btn btn-mini' %>
+          <%= link_to "Delete",
+                      category_path(category),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+          <%#= link_to "Create Sub-Category",new_sub_category_path(:category_id=> category.id), :class => 'btn btn-mini' %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Add new Category",
+            new_category_path,
+            :class => 'btn btn-primary' %>

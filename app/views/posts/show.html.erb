@@ -1,0 +1,121 @@
+ <div class="page-header">
+  <h1>Detail of Post</h1>
+</div>
+<div class="clearfix">
+  <span class="pull-left"><strong> <%= @post.title %></strong></span>
+    <span class="pull-right">
+     <strong>Location: <%= @post.location %></strong>
+    </span>
+</div>
+
+<div class="postDesc">
+  <%= @post.description %>
+</div>
+
+<div class="clearfix">
+  <span class="pull-left"><strong>Name:</strong> <%= @post.name%></span>
+  <span class="pull-right"><strong>Contact Number:</strong> <%= @post.contact_number%></span>
+</div>
+<div>
+  <span class="pull-left"><strong>Price:</strong> <%= @post.price%></span>
+  <span class="pull-right"><strong>
+    <% @post.photos.each do |i| %>
+        <%= link_to "View Image", i.image.url, :class =>"fancybox", :rel => "example_group" %>
+        <% break %>
+    <% end %>
+  </strong> </span>
+</div>
+  <% @post.photos.drop(1).each do |i| %>
+      <%= link_to "", i.image.url,:class =>"fancybox dn", :rel => "example_group" %>
+  <% end %>
+<div></br>
+  <span><strong>Posted:</strong><%= @post.created_at.strftime("%D %T")%> by <%= @post.user.first_name%> <%= @post.user.last_name%>  </span>
+</div>
+<div class="clearfix addCommentWrap">
+  <div class="favouriteStatus" post_id="<%= @post.id %>">
+    <%= image_tag "/assets/starOn.png", class: "starImg favOn #{'dn' unless current_user.favourite_post_ids.include? @post.id}"  %>
+    <a href='javascript:void(0);' class="starImg favOff <%= 'dn' if current_user.favourite_post_ids.include? @post.id %>">
+      Add to Favourite
+      <%= image_tag "/assets/starOff.png", class: "starImg favOff" %>
+    </a>
+    <%= image_tag "loader-mini.gif", class: "dn favLoader" %>
+  </div>
+
+  <%# unless current_user.is_admin %>
+      <button type="Post" id = "go_for_comment">Add Comment </button>
+  <%# end %>
+</div>
+<div class = "do_comment" style = "display:none">
+  <div class="addComment">
+    <textarea id="content" rows = "4" cols = "50"> </textarea>
+    <button type="Post" id="comment">Comment </button>
+    <%= image_tag "loader-mini.gif", class: "formLoader dn" %>
+  </div>
+</div>
+<hr>
+<strong>Recent Comments</strong>
+<div id="show_comments">
+  <% if @comments.empty? %>
+      No comments yet
+  <% else %>
+      <%= render "comments", comments: @comments %>
+  <% end %>
+  <% if @comments.length == 10 %>
+      <a class='oldComments pull-right' href="javascript:void(0);">Older comments</a>
+      <%= image_tag "loader-mini.gif", class: "pull-right dn commentLoader" %>
+  <% end %>
+</div>
+<%= link_to "<< Back to List View", "javascript: history.back();" %>
+
+<%= content_for :js do %>
+  <script type="text/javascript">
+    var busy = false, post_id="<%= @post.id %>", updateTimer;
+    $('#comment').click(function(){
+      var content = $("#content").val();
+      if ($.trim(content) == "")
+        displayFlash("Please add comment content", "alert-error");
+      else {
+        toggleDoms($(".formLoader"), $("#comment"));
+        busy = true;
+        $.ajax({
+          type: 'POST',
+          url: '/comments',
+          data: {content: content, post_id: post_id, recent_comment_id: $("#show_comments .commentBox:first").attr("comment_id")},
+          complete: function(){
+            busy = false;
+          }
+        });
+      }
+      $('.do_comment').hide();
+    });
+    $('#go_for_comment').click(function(){
+      $('.do_comment').show();
+    });
+    $(document).on("click", ".oldComments", function(){
+      toggleDoms($(".commentLoader"), $(".oldComments"));
+      var comment_id=$("#show_comments .commentBox:last").attr("comment_id");
+      $.ajax({
+        url: "/comments/"+ comment_id +"/older/"+ post_id,
+        dataType: "SCRIPT",
+        type: "GET"
+      });
+    });
+    updateTimer = setInterval(updateComments, 20000);
+    $(window).focus(function() {
+      if (!updateTimer)
+        updateTimer = setInterval(updateComments, 20000);
+    });
+    $(window).blur(function() {
+        clearInterval(updateTimer);
+        updateTimer = false;
+    });
+    $('#ViewImage').click(function(){
+      $('.fancybox').show();
+    });
+    function updateComments(){
+      var url = "/comments/"+ $("#show_comments .commentBox:first").attr("comment_id") +"/recent/"+ post_id ;
+      if (!busy)
+        $.get(url);
+    }
+  </script>
+<% end %>
