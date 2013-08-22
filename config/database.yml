@@ -1,0 +1,7 @@
+development:
+  adapter: postgresql
+  encoding: utf8
+  database: pix_app_dev
+  username: postgres
+  password: root
+  host: localhost
