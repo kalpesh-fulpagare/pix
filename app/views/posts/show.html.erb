@@ -36,7 +36,7 @@
     <%= image_tag "/assets/starOn.png", class: "starImg favOn #{'dn' unless current_user.favourite_post_ids.include? @post.id}"  %>
     <a href='javascript:void(0);' class="starImg favOff <%= 'dn' if current_user.favourite_post_ids.include? @post.id %>">
       Add to Favourite
-      <%= image_tag "/assets/starOff.png", class: "starImg favOff" %>
+      <%= image_tag "starOff.png", class: "starImg favOff" %>
     </a>
     <%= image_tag "loader-mini.gif", class: "dn favLoader" %>
   </div>

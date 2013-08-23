@@ -15,7 +15,7 @@
   <div class="control-group">
     <div class="controls">
     <button type="submit" class="btn btn-primary formSubmit pull-left">Sign in</button>
-    <img src="/assets/loader.gif" class="formLoader dn pull-left"/>
+    <%= image_tag("loader.gif", class: "formLoader dn pull-left", alr: "Please wait..") %>
     <label class="checkbox pull-left" style="width: 150px;margin-left: 30px;">
       <%= f.check_box :remember_me %>
       Stay signed in
