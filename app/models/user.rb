@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
 
   private
   def welcome_email
-    UserMailer.delay.welcome_email(self, self.tmp_password)
+    UserMailer.delay.welcome_email(self, self.tmp_password) unless self.is_admin
   end
 
 end
