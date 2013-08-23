@@ -26,11 +26,11 @@ gem 'jbuilder', '~> 1.2'
 gem 'devise', '3.0.1'
 gem 'twitter-bootstrap-rails', '2.2.7'
 gem 'haml', '4.0.3'
-gem 'mysql2', '0.3.11'
 gem 'pg'
 gem 'therubyracer', '0.11.4'
 gem "kaminari", '0.14.1'
 gem 'carrierwave'
+gem 'meta_request'
 group :doc do
   gem 'sdoc', require: false
 end
@@ -39,11 +39,6 @@ gem 'daemons', '1.1.9'
 gem 'dalli', '2.6.4'
 group :production do
   gem 'rails_12factor'
-end
-
-# This needs to be installed so we can run Rails console on OpenShift directly
-group :development do
-  gem 'meta_request'
 end
 
 ruby "1.9.3"
