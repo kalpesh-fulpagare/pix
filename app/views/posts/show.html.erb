@@ -20,7 +20,7 @@
   <span class="pull-left"><strong>Price:</strong> <%= @post.price%></span>
   <span class="pull-right"><strong>
     <% @post.photos.each do |i| %>
-        <%= link_to "View Image", i.image.url, :class =>"fancybox", :rel => "example_group" %>
+        <%= link_to "View images", i.image.url, :class =>"fancybox", :rel => "example_group" %>
         <% break %>
     <% end %>
   </strong> </span>
@@ -109,9 +109,7 @@
         clearInterval(updateTimer);
         updateTimer = false;
     });
-    $('#ViewImage').click(function(){
-      $('.fancybox').show();
-    });
+    $("a.fancybox").fancybox();
     function updateComments(){
       var url = "/comments/"+ $("#show_comments .commentBox:first").attr("comment_id") +"/recent/"+ post_id ;
       if (!busy)

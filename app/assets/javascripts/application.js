@@ -65,6 +65,7 @@ function highlightFilter(selector){
 function hideFlash(){
   clearTimeout(flashTimer);
   flashTimer = setTimeout(function() {
-    $(".alert").remove();
+    if (! $(".alert").hasClass("alert-error"))
+      $(".alert").remove();
   }, 6000);
 }
