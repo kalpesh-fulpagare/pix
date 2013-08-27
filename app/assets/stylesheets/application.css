@@ -89,3 +89,8 @@ img.starImg {
 .companyImg { width: 38px; height: 38px; margin-right: 5px; }
 .companyImgThumb { width: 210px; height: 36px; margin: 11px 5px; }
 .miniDelete {width: 22px;}
+
+#description{
+    width: 210px;
+    height:110px;
+}
