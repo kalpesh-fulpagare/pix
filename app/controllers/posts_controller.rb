@@ -5,7 +5,7 @@ class PostsController < ApplicationController
   end
 
   def show
-    @users_json =  User.select("id AS value, CONCAT(first_name, ' ', last_name) AS label").to_json
+    @users_json =  User.select("id AS value, CONCAT(first_name, ' ', last_name) AS label").where("is_admin = ?", false).to_json
     @comments = @post.comments.select("id, user_id, content, created_at").includes(:user).order("created_at DESC").limit(10)
   end
 

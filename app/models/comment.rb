@@ -15,10 +15,13 @@ class Comment < ActiveRecord::Base
     post = self.post
     post_owner = post.user
     self.save
-    UserMailer.delay.comment_mail_to_owner(post_owner, user, post, self) if post_owner.id != user.id
+    #UserMailer.delay.comment_mail_to_owner(post_owner, user, post, self) if post_owner.id != user.id
+    UserMailer.comment_mail_to_owner(post_owner, user, post, self).deliver if post_owner.id != user.id
     self.recipient_ids.each do |uid|
+      next if uid.to_i == post_owner.id
       u = User.select("id, email, first_name, last_name").find_by_id(uid)
-      UserMailer.delay.comment_mail(post_owner, user, post, self, u)
+      #UserMailer.delay.comment_mail(post_owner, user, post, self, u).deliver
+      UserMailer.comment_mail(post_owner, user, post, self, u).deliver
     end
   end
 
