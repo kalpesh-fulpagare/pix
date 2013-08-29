@@ -1,4 +1,4 @@
- <div class="page-header">
+<div class="page-header">
   <h1>Detail of Post</h1>
 </div>
 <div class="clearfix">
@@ -48,6 +48,7 @@
 <div class = "do_comment" style = "display:none">
   <div class="addComment">
     <textarea id="content" rows = "4" cols = "50"> </textarea>
+    <input type='text' id="recipient_ids" name="recipient_ids" style="display: block;"></textarea>
     <button type="Post" id="comment">Comment </button>
     <%= image_tag "loader-mini.gif", class: "formLoader dn" %>
   </div>
@@ -68,48 +69,56 @@
 <%= link_to "<< Back to List View", "javascript: history.back();" %>
 
 <%= content_for :js do %>
+  <%= javascript_include_tag "jquery-ui.triggeredAutocomplete" %>
   <script type="text/javascript">
     var busy = false, post_id="<%= @post.id %>", updateTimer;
-    $('#comment').click(function(){
-      var content = $("#content").val();
-      if ($.trim(content) == "")
-        displayFlash("Please add comment content", "alert-error");
-      else {
-        toggleDoms($(".formLoader"), $("#comment"));
-        busy = true;
-        $.ajax({
-          type: 'POST',
-          url: '/comments',
-          data: {content: content, post_id: post_id, recent_comment_id: $("#show_comments .commentBox:first").attr("comment_id")},
-          complete: function(){
-            busy = false;
-          }
-        });
-      }
-      $('.do_comment').hide();
-    });
-    $('#go_for_comment').click(function(){
-      $('.do_comment').show();
-    });
-    $(document).on("click", ".oldComments", function(){
-      toggleDoms($(".commentLoader"), $(".oldComments"));
-      var comment_id=$("#show_comments .commentBox:last").attr("comment_id");
-      $.ajax({
-        url: "/comments/"+ comment_id +"/older/"+ post_id,
-        dataType: "SCRIPT",
-        type: "GET"
+    users_array = <%= @users_json.html_safe %>;
+    $(document).ready(function(){
+      $('#content').triggeredAutocomplete({
+        hidden: '#recipient_ids',
+        source: users_array
       });
+      $('#comment').click(function(){
+        var content = $("#content").val();
+        if ($.trim(content) == "")
+          displayFlash("Please add comment content", "alert-error");
+        else {
+          toggleDoms($(".formLoader"), $("#comment"));
+          busy = true;
+          $.ajax({
+            type: 'POST',
+            url: '/comments',
+            data: {content: content, post_id: post_id, recent_comment_id: $("#show_comments .commentBox:first").attr("comment_id"), recipient_ids: $("#recipient_ids").val()},
+            complete: function(){
+              busy = false;
+            }
+          });
+        }
+        $('.do_comment').hide();
+      });
+      $('#go_for_comment').click(function(){
+        $('.do_comment').show();
+      });
+      $(document).on("click", ".oldComments", function(){
+        toggleDoms($(".commentLoader"), $(".oldComments"));
+        var comment_id=$("#show_comments .commentBox:last").attr("comment_id");
+        $.ajax({
+          url: "/comments/"+ comment_id +"/older/"+ post_id,
+          dataType: "SCRIPT",
+          type: "GET"
+        });
+      });
+      updateTimer = setInterval(updateComments, 20000);
+      $(window).focus(function() {
+        if (!updateTimer)
+          updateTimer = setInterval(updateComments, 20000);
+      });
+      $(window).blur(function() {
+          clearInterval(updateTimer);
+          updateTimer = false;
+      });
+      $("a.fancybox").fancybox();
     });
-    updateTimer = setInterval(updateComments, 20000);
-    $(window).focus(function() {
-      if (!updateTimer)
-        updateTimer = setInterval(updateComments, 20000);
-    });
-    $(window).blur(function() {
-        clearInterval(updateTimer);
-        updateTimer = false;
-    });
-    $("a.fancybox").fancybox();
     function updateComments(){
       var url = "/comments/"+ $("#show_comments .commentBox:first").attr("comment_id") +"/recent/"+ post_id ;
       if (!busy)

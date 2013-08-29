@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
   end
 
   def create
-    comment = current_user.comments.new(content: params[:content], post_id: params[:post_id])
+    comment = current_user.comments.new(content: params[:content], post_id: params[:post_id], recipient_ids: params[:recipient_ids].split(","))
     comment.save_and_mail(current_user)
     @comments = Comment.recent_comments(params[:recent_comment_id], params[:post_id])
   end

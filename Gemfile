@@ -40,7 +40,7 @@ gem 'dalli', '2.6.4'
 group :production do
   gem 'rails_12factor'
 end
-
+gem 'jquery-ui-rails'
 ruby "1.9.3"
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
