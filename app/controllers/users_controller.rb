@@ -49,6 +49,7 @@ class UsersController < ApplicationController
     else
       flash[:alert] = "Unable to delete user"
     end
+    redirect_to users_path
   end
 
 
