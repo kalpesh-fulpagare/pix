@@ -8,6 +8,7 @@
  bootstrap-transition.js     bootstrap-collapse.js     bootstrap-scrollspy.js     bootstrap-typeahead.js */
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui.min
 //= require twitter/bootstrap/bootstrap-alert
 //= require twitter/bootstrap/bootstrap-button
 //= require twitter/bootstrap/bootstrap-dropdown
