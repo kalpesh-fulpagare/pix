@@ -13,6 +13,6 @@ class UserMailer < ActionMailer::Base
 
   def comment_mail(post_owner, comment_owner, post, comment, user)
      @post_owner, @comment_owner, @post, @comment, @user = post_owner, comment_owner, post, comment, user
-     mail(to: post_owner.email, subject: "Comment on Your Post of #{@post_owner.first_name} by #{@comment_owner.first_name}", content_type: "text/html" )
+     mail(to: user.email, subject: "Comment on Post of #{@post_owner.first_name} by #{@comment_owner.first_name}", content_type: "text/html" )
   end
 end
