@@ -1,6 +1,7 @@
 <div class="page-header">
   <h1>Detail of Post</h1>
 </div>
+<%= link_to "Edit post details", edit_post_path(@post) %>
 <div class="clearfix">
   <span class="pull-left"><strong> <%= @post.title %></strong></span>
     <span class="pull-right">
@@ -18,15 +19,15 @@
 </div>
 <div>
   <span class="pull-left"><strong>Price:</strong> <%= @post.price%></span>
-  <span class="pull-right"><strong>
+  <span class="pull-right">
     <% @post.photos.each do |i| %>
-        <%= link_to "View images", i.image.url, :class =>"fancybox", :rel => "example_group" %>
+        <strong> <%= link_to "View images", i.image.url, :class =>"fancybox", :rel => "example_group" %></strong>
         <% break %>
     <% end %>
-  </strong> </span>
+   </span>
 </div>
   <% @post.photos.drop(1).each do |i| %>
-      <%= link_to "", i.image.url,:class =>"fancybox dn", :rel => "example_group" %>
+      <%= link_to "View images", i.image.url,:class =>"fancybox dn", :rel => "example_group" %>
   <% end %>
 <div></br>
   <span><strong>Posted:</strong><%= @post.created_at.strftime("%D %T")%> by <%= @post.user.first_name%> <%= @post.user.last_name%>  </span>

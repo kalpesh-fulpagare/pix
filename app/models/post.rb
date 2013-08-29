@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
   validates :title, :description, :category_id, :sub_category_id, :location, :price, :name, :contact_number, presence: true
   validates_numericality_of :price, :contact_number, allow_blank: true
   validates_inclusion_of :share, :in => [true, false], message: "select type for your add"
-
+  #mount_uploader :image, AvatarUploader
   HUMANIZED_ATTRIBUTES = { :share => "Please"}
 
   class << self

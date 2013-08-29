@@ -55,9 +55,17 @@ class PostsController < ApplicationController
     end
   end
 
+  def delete_image
+    photo = Photo.find_by_id(params[:photo_id])
+    if photo.present?
+      photo.delete
+      redirect_to edit_post_path(params[:id])
+    end
+  end
+
   private
   def post_params
-    params.require(:post).permit(:category_id, :sub_category_id, :share, :title, :description, :location, :price, :name, :contact_number, :photos_attributes)
+    params.require(:post).permit! #(:category_id, :sub_category_id, :share, :title, :description, :location, :price, :name, :contact_number,:photo)
   end
 
 end
