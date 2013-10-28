@@ -97,7 +97,7 @@
       $(".imageFiles input[type='file']:first").val("");
     });
     $(".photoFiles input[type='file']").each(function(){ if ($(this).next().attr("type") == 'hidden') $(this).hide(); });
-    $(document).on("click", ". ", function(){
+    $(document).on("click", ".clearImage", function(){
       var result = confirm("Are you sure?");
       if(result)
         $(this).parent().remove();
