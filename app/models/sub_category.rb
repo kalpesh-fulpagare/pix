@@ -6,6 +6,7 @@ class SubCategory < ActiveRecord::Base
   validates :category_id, presence: true
 
   after_save :update_cache_time
+  after_destroy :update_cache_time
 
   def update_cache_time
     ss = SystemSetting.find_by_name("cache")
