@@ -26,24 +26,26 @@
     <% end %>
    </span>
 </div>
-  <% @post.photos.drop(1).each do |i| %>
-      <%= link_to "View images", i.image.url,:class =>"fancybox dn", :rel => "example_group" %>
-  <% end %>
+<% @post.photos.drop(1).each do |i| %>
+    <%= link_to "View images", i.image.url,:class =>"fancybox dn", :rel => "example_group" %>
+<% end %>
 <div></br>
   <span><strong>Posted:</strong><%= @post.created_at.strftime("%D %T")%> by <%= @post.user.first_name%> <%= @post.user.last_name%>  </span>
 </div>
 <div class="clearfix addCommentWrap">
-  <div class="favouriteStatus" post_id="<%= @post.id %>">
-    <%= image_tag "starOn.png", class: "starImg favOn #{'dn' unless current_user.favourite_post_ids.include? @post.id}"  %>
-    <a href='javascript:void(0);' class="starImg favOff <%= 'dn' if current_user.favourite_post_ids.include? @post.id %>">
-      Add to Favourite
-      <%= image_tag "starOff.png", class: "starImg favOff" %>
-    </a>
-    <%= image_tag "loader-mini.gif", class: "dn favLoader" %>
-  </div>
+  <% unless current_user.is_admin %>
+      <div class="favouriteStatus" post_id="<%= @post.id %>">
+        <%= image_tag "starOn.png", class: "starImg favOn #{'dn' unless current_user.favourite_post_ids.include? @post.id}"  %>
+        <a href='javascript:void(0);' class="starImg favOff <%= 'dn' if current_user.favourite_post_ids.include? @post.id %>">
+          Add to Favourite
+          <%= image_tag "starOff.png", class: "starImg favOff" %>
+        </a>
+        <%= image_tag "loader-mini.gif", class: "dn favLoader" %>
+      </div>
+  <% end %>
 
   <%# unless current_user.is_admin %>
-      <button type="Post" id = "go_for_comment">Add Comment </button>
+  <button type="Post" id = "go_for_comment">Add Comment </button>
   <%# end %>
 </div>
 <div class = "do_comment" style = "display:none">
@@ -70,60 +72,60 @@
 <%= link_to "<< Back to List View", "javascript: history.back();" %>
 
 <%= content_for :js do %>
-  <%= javascript_include_tag "jquery-ui.triggeredAutocomplete" %>
-  <script type="text/javascript">
-    var busy = false, post_id="<%= @post.id %>", updateTimer;
-    users_array = <%= @users_json.html_safe %>;
-    $(document).ready(function(){
-      $('#content').triggeredAutocomplete({
-        hidden: '#recipient_ids',
-        source: users_array
-      });
-      $('#comment').click(function(){
-        var content = $("#content").val();
-        if ($.trim(content) == "")
-          displayFlash("Please add comment content", "alert-error");
-        else {
-          toggleDoms($(".formLoader"), $("#comment"));
-          busy = true;
-          $.ajax({
-            type: 'POST',
-            url: '/comments',
-            data: {content: content, post_id: post_id, recent_comment_id: $("#show_comments .commentBox:first").attr("comment_id"), recipient_ids: $("#recipient_ids").val()},
-            complete: function(){
-              busy = false;
-            }
-          });
-        }
-        $('.do_comment').hide();
-      });
-      $('#go_for_comment').click(function(){
-        $('.do_comment').show();
-      });
-      $(document).on("click", ".oldComments", function(){
-        toggleDoms($(".commentLoader"), $(".oldComments"));
-        var comment_id=$("#show_comments .commentBox:last").attr("comment_id");
-        $.ajax({
-          url: "/comments/"+ comment_id +"/older/"+ post_id,
-          dataType: "SCRIPT",
-          type: "GET"
+    <%= javascript_include_tag "jquery-ui.triggeredAutocomplete" %>
+    <script type="text/javascript">
+        var busy = false, post_id="<%= @post.id %>", updateTimer;
+        users_array = <%= @users_json.html_safe %>;
+        $(document).ready(function(){
+            $('#content').triggeredAutocomplete({
+                hidden: '#recipient_ids',
+                source: users_array
+            });
+            $('#comment').click(function(){
+                var content = $("#content").val();
+                if ($.trim(content) == "")
+                    displayFlash("Please add comment content", "alert-error");
+                else {
+                    toggleDoms($(".formLoader"), $("#comment"));
+                    busy = true;
+                    $.ajax({
+                        type: 'POST',
+                        url: '/comments',
+                        data: {content: content, post_id: post_id, recent_comment_id: $("#show_comments .commentBox:first").attr("comment_id"), recipient_ids: $("#recipient_ids").val()},
+                        complete: function(){
+                            busy = false;
+                        }
+                    });
+                }
+                $('.do_comment').hide();
+            });
+            $('#go_for_comment').click(function(){
+                $('.do_comment').show();
+            });
+            $(document).on("click", ".oldComments", function(){
+                toggleDoms($(".commentLoader"), $(".oldComments"));
+                var comment_id=$("#show_comments .commentBox:last").attr("comment_id");
+                $.ajax({
+                    url: "/comments/"+ comment_id +"/older/"+ post_id,
+                    dataType: "SCRIPT",
+                    type: "GET"
+                });
+            });
+            updateTimer = setInterval(updateComments, 20000);
+            $(window).focus(function() {
+                if (!updateTimer)
+                    updateTimer = setInterval(updateComments, 20000);
+            });
+            $(window).blur(function() {
+                clearInterval(updateTimer);
+                updateTimer = false;
+            });
+            $("a.fancybox").fancybox();
         });
-      });
-      updateTimer = setInterval(updateComments, 20000);
-      $(window).focus(function() {
-        if (!updateTimer)
-          updateTimer = setInterval(updateComments, 20000);
-      });
-      $(window).blur(function() {
-          clearInterval(updateTimer);
-          updateTimer = false;
-      });
-      $("a.fancybox").fancybox();
-    });
-    function updateComments(){
-      var url = "/comments/"+ $("#show_comments .commentBox:first").attr("comment_id") +"/recent/"+ post_id ;
-      if (!busy)
-        $.get(url);
-    }
-  </script>
+        function updateComments(){
+            var url = "/comments/"+ $("#show_comments .commentBox:first").attr("comment_id") +"/recent/"+ post_id ;
+            if (!busy)
+                $.get(url);
+        }
+    </script>
 <% end %>
