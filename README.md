@@ -1,6 +1,5 @@
 PIX
-=======
-
+=====
 Portal for Information eXchange
 
 Packages Required:
