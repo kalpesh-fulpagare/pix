@@ -15,6 +15,9 @@ PixApp::Application.routes.draw do
   resources :posts, except: [:index]  do
     put 'mark_favourite' => 'posts#mark_favourite'
     resources :photos, :only => [:create, :destroy]
+    member do
+      get 'delete_image'
+    end
   end
   get "/comments/:id/older/:post_id" => 'comments#older'
   get "/comments/:recent_comment_id/recent/:post_id" => 'comments#recent'

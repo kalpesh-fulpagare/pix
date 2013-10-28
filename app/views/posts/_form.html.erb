@@ -34,7 +34,7 @@
       <% post.photos.each do |photo|%>
         <%if photo.id.present? %>
           <%= photo.image_identifier %>
-          <%= link_to "Delete",delete_image_post_path(:photo_id=>photo.id),:rel=>"#{photo.id}",:class=>"delete_image" %>
+          <%= link_to "Delete", delete_image_post_path(:photo_id=>photo.id),:rel=>"#{photo.id}",:class=>"delete_image" %>
           <br>
         <%end%>
       <%end%>
@@ -45,11 +45,20 @@
         <%= f.fields_for :photos do |photo| %>
           <%= photo.file_field :image ,:class=>"label_logo"  %>
         <% end %>
-        <a href="javascript:void(0);" class="clearImage">Clear file field</a>
       </div>
     </div>
     <a href="javascript:void(0);" class="addImage">Add more images</a>
-  <%end%>
+  <% else %>
+    <div class="control-group imageFiles">
+    <%= f.label "Upload Photo",:class=>"label_logo" %>
+    <div class="controls photoFiles">
+      <%= f.fields_for :photos do |photo| %>
+        <%= photo.file_field :image ,:class=>"label_logo"  %>
+      <% end %>
+    </div>
+    <a href="javascript:void(0);" class="addImage">Add more images</a>
+    </div>
+  <% end %>
   <div class="control-group">
     <label for="field2">Location<span class="mandatory-field">*</span></label>
     <%= f.text_field :location,:id => "location" %>
@@ -81,20 +90,18 @@
     });
     showHideCats();
     $(".addImage").click(function(){
-      var emptyFlag=false, len = $('.imageFiles input[type="file"]').length;
-      $('.imageFiles').find("input[type='file']").each(function(){
-        if($.trim($(this).val()) == "")
-          emptyFlag = true;
-      });
-      if(emptyFlag)
-        alert("Please add images from Existing file selector!");
-      else
-        $(".imageFiles").append('<div class="controls"><input name="post[photos_attributes]['+ new Date().getTime() +'][image]" type="file"><a href="javascript:void(0);" class="removeImg">Remove Image</a></div>');
-      if (len == 4)
-        $(".addImage").hide();
-    });
-    $(".clearImage").click(function(){
-      $(".imageFiles input[type='file']:first").val("");
+      // var emptyFlag=false, len = $('.imageFiles input[type="file"]').length;
+      // $('.imageFiles').find("input[type='file']").each(function(){
+      //   if($.trim($(this).val()) == "")
+      //     emptyFlag = true;
+      // });
+      // if(emptyFlag)
+      //   alert("Please add images from Existing file selector!");
+      // else{
+      $(".imageFiles").append('<div class="controls"><input name="post[photos_attributes]['+ new Date().getTime() +'][image]" type="file"><a href="javascript:void(0);" class="clearImage">X</a></div>');
+      // if (len == 4)
+      //   $(".addImage").hide();
+      // }
     });
     $(".photoFiles input[type='file']").each(function(){ if ($(this).next().attr("type") == 'hidden') $(this).hide(); });
     $(document).on("click", ".clearImage", function(){
