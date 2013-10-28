@@ -2,7 +2,7 @@ class Category < ActiveRecord::Base
   has_many :sub_categories, dependent: :destroy
   belongs_to :posts, dependent: :destroy
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   after_save :update_cache_time
   after_destroy :update_cache_time

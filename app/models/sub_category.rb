@@ -4,6 +4,7 @@ class SubCategory < ActiveRecord::Base
 
   validates :name, presence: true
   validates :category_id, presence: true
+  validates :name, uniqueness: { scope: :category_id }, allow_blank: true
 
   after_save :update_cache_time
   after_destroy :update_cache_time
