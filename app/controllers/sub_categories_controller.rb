@@ -27,7 +27,7 @@ class SubCategoriesController < ApplicationController
 
     respond_to do |format|
       if @sub_category.save
-        format.html { redirect_to '/categories', notice: 'Sub category was successfully created.' }
+        format.html { redirect_to category_url(@sub_category.category_id), notice: 'Sub category was successfully created.' }
         format.json { render action: 'show', status: :created, location: @sub_category }
       else
         format.html { render action: 'new' }
@@ -55,7 +55,7 @@ class SubCategoriesController < ApplicationController
   def destroy
     @sub_category.destroy
     respond_to do |format|
-      format.html { redirect_to sub_categories_url }
+      format.html { redirect_to categories_url }
       format.json { head :no_content }
     end
   end
