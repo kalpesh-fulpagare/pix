@@ -31,6 +31,7 @@ gem 'therubyracer', '0.11.4'
 gem "kaminari", '0.14.1'
 gem 'carrierwave'
 gem 'meta_request'
+gem "rmagick","2.13.1"
 group :doc do
   gem 'sdoc', require: false
 end
