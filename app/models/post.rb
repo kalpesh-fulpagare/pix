@@ -12,6 +12,11 @@ class Post < ActiveRecord::Base
   class << self
     def fetch_posts params, user
       posts = select("id, title, location, user_id").order("updated_at DESC")
+
+      #-----------------search functionality--------------------------------
+      posts = posts.where("title LIKE ?", "%#{params[:search]}%") if params[:search].present?
+      #-------------------------------------------------------------------------------------
+
       posts = posts.where("category_id=?", params[:category_id]) if params[:category_id].present?
       posts = posts.where("sub_category_id=?", params[:sub_category_id]) if params[:sub_category_id].present?
       if params[:post_type] == "favourite"
@@ -26,5 +31,6 @@ class Post < ActiveRecord::Base
     def human_attribute_name(attr, options={})
       HUMANIZED_ATTRIBUTES[attr.to_sym] || super
     end
+
   end
 end

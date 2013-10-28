@@ -1,8 +1,18 @@
 Welcome <strong><%= display_name current_user %></strong>
+<%= form_tag  dashboard_path,:class => "form-search", :method => 'get' do %>
+  <%= search_field_tag 'search', params[:search], :placeholder => "Search", :class => "input-medium search-query"%>
+  <%= image_submit_tag ("search_icon.png"), :id => "searchBox" %>
+  <%= hidden_field_tag "category_id", params[:category_id] %>
+  <%= hidden_field_tag "sub_category_id", params[:sub_category_id] %>
+  <%= hidden_field_tag "post_type", params[:post_type] %>
+<% end %>
 <% unless current_user.is_admin %>
 <%= link_to "Post your ad", "/posts/new", class: "btn btn-primary pull-right" %>
 <% end %>
 <div class="clearfix" style="margin-top: 20px;"></div>
 <div class="postsTable">
-  <%= render "posts", posts: @posts %>
+<% if params[:search].present? %>
+    <div class="breadcrumb" ><%= "Search result for #{params[:search]} "%></div>
+<% end %>
+<%= render "posts", posts: @posts %>
 </div>
