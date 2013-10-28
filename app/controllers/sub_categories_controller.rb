@@ -22,8 +22,6 @@ class SubCategoriesController < ApplicationController
   def create
     @category = Category.find(params[:sub_category][:category_id])
     @sub_category = SubCategory.new(sub_category_params)
-    #@category = Category.find(params[:category_id])
-    #@sub_category = @category.sub_categories.new
 
     respond_to do |format|
       if @sub_category.save
@@ -41,7 +39,7 @@ class SubCategoriesController < ApplicationController
   def update
     respond_to do |format|
       if @sub_category.update(sub_category_params)
-        format.html { redirect_to  '/categories', notice: 'Sub category was successfully updated.' }
+        format.html { redirect_to  category_url(@sub_category.category_id), notice: 'Sub category was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
