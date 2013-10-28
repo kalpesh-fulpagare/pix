@@ -68,4 +68,18 @@ class PostsController < ApplicationController
     params.require(:post).permit! #(:category_id, :sub_category_id, :share, :title, :description, :location, :price, :name, :contact_number,:photo)
   end
 
+  def find_post
+    @post = Post.find_by_id(params[:id])
+    unless @post
+      respond_to do |format|
+        format.html{
+          redirect_to "/dashboard", alert: "Post not found"
+        }
+        format.js{
+          render js: "displayFlash('Post not found', 'alert-error');"
+        }
+      end
+    end
+  end
+
 end
