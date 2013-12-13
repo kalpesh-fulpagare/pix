@@ -11,5 +11,8 @@ Welcome <strong><%= display_name current_user %></strong>
 <% end %>
 
 <div class="postsTable">
-  <%= render "posts", posts: @posts %>
+<% if params[:search].present? %>
+    <div class="breadcrumb" ><%= "Search result for #{params[:search].try(:strip)} "%></div>
+<% end %>
+<%= render "posts", posts: @posts %>
 </div>

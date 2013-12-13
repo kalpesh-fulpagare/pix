@@ -30,5 +30,6 @@ class Post < ActiveRecord::Base
     def human_attribute_name(attr, options={})
       HUMANIZED_ATTRIBUTES[attr.to_sym] || super
     end
+
   end
 end
