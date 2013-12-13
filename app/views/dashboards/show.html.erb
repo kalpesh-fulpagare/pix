@@ -1,8 +1,15 @@
 Welcome <strong><%= display_name current_user %></strong>
-<% unless current_user.is_admin %>
-<%= link_to "Post your ad", "/posts/new", class: "btn btn-primary pull-right" %>
-<% end %>
 <div class="clearfix" style="margin-top: 20px;"></div>
+<%= form_tag request.path, class: "form-inline", id: "searchForm", method: :get do %>
+  <div class="form-group">
+  <input type="text" class="search form-control" name='search' placeholder="Search" value="<%= params[:search].try(:strip) %>">
+  <button type="submit" class="btn btn-info">Search</button>
+  <% unless current_user.is_admin %>
+    <%= link_to "Post your ad", "/posts/new", class: "btn btn-primary pull-right" %>
+  <% end %>
+  </div>
+<% end %>
+
 <div class="postsTable">
   <%= render "posts", posts: @posts %>
 </div>

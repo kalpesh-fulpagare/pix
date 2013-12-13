@@ -14,9 +14,16 @@
 //= require twitter/bootstrap/bootstrap-dropdown
 //= require twitter/bootstrap/bootstrap-collapse
 //= require jquery.fancybox
-//= require posts
 var flashTimer;
 $(document).ready(function(){
+  $.extend($.expr[":"], {
+    containsIN: function(elem, i, match, array) {
+      return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+  $.extend(jQuery.expr[':'], {
+    containsIgnoreCase: "(a.textContent||a.innerText||jQuery(a).text()||'').toLowerCase().indexOf((m[3]||'').toLowerCase())>=0"
+  });
   $(".back-to-top").hide();
   $(".navbar .container ul.nav li[rel='" + $(".activeTab").text() + "']").addClass("active");
   $(document).on("click", ".pagination ul li:not(.active) a", function(){
@@ -44,8 +51,24 @@ $(document).ready(function(){
 
   });
   hideFlash();
-});
+  $(document).on("click", ".filterLinks", function(e){
+    e.preventDefault();
+    $("#searchForm").attr("action", $(this).attr("href"));
+    $("#searchForm").submit();
+  });
 
+  if($("#searchForm").length == 1 && $.trim($(".search").val()) !== ''){
+    highlightText($.trim($(".search").val()));
+  }
+});
+function highlightText(txt){
+  $("tr.postDetails td:containsIN('" + txt + "')").each(function () {
+    var text = $(this).html();
+    var regEx = new RegExp(txt, "ig");
+    text = text.replace(regEx, "<span class='highlight'>" + txt + "</span>")
+    $(this).html(text);
+  });
+}
 function toggleDoms(show, hide){
   show.show();
   hide.hide();

@@ -46,18 +46,18 @@
             = link_to image_tag("webonise-logo.png", class: "companyImgThumb"), "/dashboard"
             %hr
             - unless current_user.is_admin
-              = link_to "My Favourite Ads", "/dashboard/posts/favourite", id: "favouriteFilter"
+              = link_to "My Favourite Ads", "/dashboard/posts/favourite", id: "favouriteFilter", class: "filterLinks"
               %br
-              = link_to "My Ads", "/dashboard/posts/my_ads", id: "myAdFilter"
+              = link_to "My Ads", "/dashboard/posts/my_ads", id: "myAdFilter", class: "filterLinks"
               %hr
             - cache("viewCatSubCat#{@system_setting.value['category']}#{@system_setting.value['sub_category']}") do
               - @categories.each do |category|
                 %ul.list-group
                   %li
-                    = link_to category.name, "/dashboard/category/#{category.id}", id: "category#{category.id}"
+                    = link_to category.name, "/dashboard/category/#{category.id}", id: "category#{category.id}", class: "filterLinks"
                     - (@sub_categories[category.id] || []).each do |sub_category|
                       %ul.list-group
-                        %li= link_to sub_category.name, "/dashboard/sub_category/#{sub_category.id}", id: "subCategory#{sub_category.id}"
+                        %li= link_to sub_category.name, "/dashboard/sub_category/#{sub_category.id}", id: "subCategory#{sub_category.id}", class: "filterLinks"
           .span8#contentBody
             .actionLoader
             = bootstrap_flash

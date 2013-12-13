@@ -10,10 +10,14 @@ class Post < ActiveRecord::Base
   HUMANIZED_ATTRIBUTES = { :share => "Please"}
 
   class << self
-    def fetch_posts params, user
+    def fetch_posts params, user, search=nil
       posts = select("id, title, location, user_id").order("updated_at DESC")
       posts = posts.where("category_id=?", params[:category_id]) if params[:category_id].present?
       posts = posts.where("sub_category_id=?", params[:sub_category_id]) if params[:sub_category_id].present?
+      if search.present?
+        search = "%#{search}%".strip.downcase
+        posts = posts.where("LOWER(title) LIKE :search OR LOWER(description) LIKE :search OR LOWER(location) LIKE :search", {search: search})
+      end
       if params[:post_type] == "favourite"
         posts = posts.where("id IN (?)", user.favourite_post_ids)
       elsif params[:post_type] == "my_ads"

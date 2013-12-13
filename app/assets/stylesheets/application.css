@@ -95,3 +95,6 @@ img.starImg {
     width: 210px;
     height:110px;
 }
+.highlight {
+  background-color: yellow;
+}
